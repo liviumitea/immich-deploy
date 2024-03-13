@@ -5,8 +5,8 @@ metadata:
   namespace: immich
 data:
   # Add non-sensitive data here
-  DB_USERNAME: "immich"
-  DB_DATABASE_NAME: "immich"
+  POSTGRES_USER: "immich"
+  POSTGRES_DB: "immich"
 
 ---
 apiVersion: v1
