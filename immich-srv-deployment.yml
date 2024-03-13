@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-server
+  template:
+    metadata:
+      labels:
+        app: immich-server
+    spec:
+      containers:
+      - name: immich-server
+        image: ghcr.io/immich-app/immich-server:release
+        command: ["start.sh", "immich"]
+        ports:
+        - containerPort: 3001
+        volumeMounts:
+        - name: upload-volume
+          mountPath: /usr/src/app/upload
+        - name: external-volume
+          mountPath: /usr/src/app/external
+        - name: localtime-volume
+          mountPath: /etc/localtime
+          readOnly: true
+        envFrom:
+        - configMapRef:
+            name: immich-config
+        - secretRef:
+            name: immich-secret
+      volumes:
+      - name: upload-volume
+        hostPath:
+          path: /data-nfs/immich
+      - name: external-volume
+        hostPath:
+          path: /data-nfs/immich
+      - name: localtime-volume
+        hostPath:
+          path: /etc/localtime
